@@ -12,13 +12,15 @@ app.use(express.json());
 
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.vwx9p.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = "mongodb+srv://admin:admin@cluster0.zwxug.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+console.log(uri);
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function run() {
     try {
         await client.connect();
-        const serviceCollection = client.db('geniusCar').collection('service');
+        const serviceCollection = client.db('carUser').collection('services');
+        const orderCollection = client.db('carUser').collection('services');
 
         app.get('/service', async (req, res) => {
             const query = {};
@@ -27,27 +29,34 @@ async function run() {
             res.send(services);
         });
 
-        app.get('/service/:id', async(req, res) =>{
+        app.get('/service/:id', async (req, res) => {
             const id = req.params.id;
-            const query={_id: ObjectId(id)};
+            const query = { _id: ObjectId(id) };
             const service = await serviceCollection.findOne(query);
             res.send(service);
         });
 
         // POST
-        app.post('/service', async(req, res) =>{
+        app.post('/service', async (req, res) => {
             const newService = req.body;
             const result = await serviceCollection.insertOne(newService);
             res.send(result);
         });
 
         // DELETE
-        app.delete('/service/:id', async(req, res) =>{
+        app.delete('/service/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id: ObjectId(id)};
+            const query = { _id: ObjectId(id) };
             const result = await serviceCollection.deleteOne(query);
             res.send(result);
         });
+
+        //order collection API
+        app.post('/order', async (req, res) => {
+            const order = req.body;
+            const result = await orderCollection.insertOne(order);
+            res.send(result);
+        })
 
     }
     finally {
