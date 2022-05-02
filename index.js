@@ -99,6 +99,10 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/hero', (req, res) => {
+            console.log('hero meets heroku');
+        })
+
     }
     finally {
 
