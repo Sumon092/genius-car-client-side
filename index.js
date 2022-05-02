@@ -100,7 +100,7 @@ async function run() {
         })
 
         app.get('/hero', (req, res) => {
-            console.log('hero meets heroku');
+            res.send('hero meets heroku');
         })
 
     }
